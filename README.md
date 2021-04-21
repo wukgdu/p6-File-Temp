@@ -7,6 +7,9 @@ File::Temp
 
 SYNOPSIS
 ========
+    # Important: all $filehandle should be closed by hand after being used
+    #            to make sure Windows could unlink it;
+    #            while *nix needn't. # :|
 
     # Generate a temp file in a temp dir
     my ($filename,$filehandle) = tempfile;

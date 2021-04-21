@@ -1,7 +1,7 @@
 use Test;
 use File::Directory::Tree;
 
-plan(14);
+plan(18);
 
 my (@should-be-unlinked, @should-be-kept);
 
@@ -14,6 +14,7 @@ END {
         if $f.IO ~~ :f
         {
             unlink($f);
+            nok($f.IO ~~ :e, "file $f should be unlinked");
         }
         elsif $f.IO ~~ :d
         {
@@ -44,14 +45,20 @@ ok($name.IO ~~ :e, "tempfile exists after closing the handle");
 
 ($name,$handle) = tempfile( :!unlink );
 @should-be-kept.push: $name;
+ok($handle.close, "tempfile closed");
+
 
 ($name,$handle) = tempfile( :prefix("foo") );
 @should-be-unlinked.push: $name;
 ok($name ~~ /foo/, "name has foo in it");
+ok($handle.close, "tempfile closed");
+
 
 ($name,$handle) = tempfile( :suffix(".txt") );
 @should-be-unlinked.push: $name;
 ok($name ~~ / ".txt" $ /, "name ends in .txt");
+ok($handle.close, "tempfile closed");
+
 
 
 # begin tempdir tests
