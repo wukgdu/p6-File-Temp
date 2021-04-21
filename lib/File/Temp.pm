@@ -16,6 +16,7 @@ my role File::Temp::AutoUnlink {
     submethod DESTROY {
         given self.path {
             if $_.path.IO ~~ :f { # Workaround, should just be $_ ~~ :f
+                self.close;
                 my $did;
                 $roster-lock.protect: {
                     $did = %roster{$_.path}:delete;
